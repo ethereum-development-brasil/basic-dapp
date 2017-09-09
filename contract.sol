@@ -23,7 +23,7 @@ contract MyContract {
 
     function kill() {
         if (msg.sender == creator) {
-            suicide(creator);
+            selfdestruct(creator);
         }
     }
 }
