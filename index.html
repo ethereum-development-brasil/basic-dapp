@@ -1,15 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
-
 <head>
-    <title>myDapp></title>
-    <script src="web3.js/dist/web3.min.js" type="text/javascript"></script>
+    <title>Basic Ethereum Dapp</title>
+    <script src="web3js/dist/web3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
+        
+        var contract_address = "0x9D1aF3171786A0658072a35256f4147df7A3976A";
+        var contract_abi = [ { "constant": true, "inputs": [], "name": "getCreator", "outputs": [ { "name": "", "type": "address", "value": "0xc667e0aaf558667a5d872f90c2429f4c3bd88eca" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewNumber", "type": "uint256" } ], "name": "setMyNumber", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getNumber", "outputs": [ { "name": "", "type": "uint256", "value": "3" } ], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ];
+
         if (typeof web3 !== 'undefined') {
             web3 = new Web3(web3.currentProvider);
         } else {
             // set the provider you want from Web3.providers
-            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+        }
+
+        var contract = web3.eth.contract(contract_abi).at(contract_address);
+
+        function getCounter(){
+            contract.getNumber(function(err, result){
+                if(!err){
+                    document.getElementById("myCounter").innerText = result.toNumber();
+                } else {
+                    console.error(err);
+                }
+            });
+        }
+
+        function increaseCounter(){
+            contract.increaseCounter(function(err, result){
+                if(!err){
+                    document.getElementById("myCounter").innerText = result.toNumber();
+                } else {
+                    console.error(err);
+                }
+            })
         }
 
         function getBalance(){
@@ -25,7 +49,20 @@
 </head>
 
 <body>
-    <h1>This is my balance</h1>
+    <h1>Basic Ethereum Dapp</h1>
+
+    <hr>
+
+    <h2>Interact with a contract</h2>
+    <button onclick="getCounter()">Update Counter</button>
+    <button onclick="increaseCounter()">increaseCounter</button>
+
+    <p>Counter is <span id="myCounter"></span></p>
+    <p id="alert-msg"></p>
+
+    <hr>
+
+    <h2>This is my balance</h2>
     <button onclick="getBalance()">Update my balance</button>
     <span id="myBalance"></span> in Ether
 
