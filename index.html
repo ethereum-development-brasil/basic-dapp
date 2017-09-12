@@ -4,8 +4,8 @@
     <title>Basic Ethereum Dapp</title>
     <script src="web3js/dist/web3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var contract_address = "0x901E60561D618f57396beAC3753b96Ee0d54CFdc";
-        var contract_abi = [ { "constant": true, "inputs": [], "name": "getCreator", "outputs": [ { "name": "", "type": "address", "value": "0xa1fc10c18c94621349fb0762b4d95ea679c8ad58" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewNumber", "type": "uint256" } ], "name": "setMyNumber", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getMyNumber", "outputs": [ { "name": "", "type": "uint256", "value": "3" } ], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ];
+        var contract_address = "0x98c4b82517F7AD72d9782B271C179b0B7A5fd60E";
+        var contract_abi = [ { "constant": true, "inputs": [], "name": "getCreator", "outputs": [ { "name": "", "type": "address", "value": "0xb672064863165cebe5460c1e5d5e2cd5bed959fe" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewNumber", "type": "uint256" } ], "name": "setMyNumber", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getNumber", "outputs": [ { "name": "", "type": "uint256", "value": "3" } ], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ];
 
         if (typeof web3 !== 'undefined') {
             web3 = new Web3(web3.currentProvider);
@@ -17,7 +17,7 @@
         var contract = web3.eth.contract(contract_abi).at(contract_address);
 
         function getCounter() {
-            contract.getMyNumber(function (err, result) {
+            contract.getNumber(function (err, result) {
                 if (!err) {
                     document.getElementById("myCounter").innerText = result.toNumber();
                 } else {
@@ -29,7 +29,7 @@
         function increaseCounter() {
             var currentNumber;
 
-            contract.getMyNumber(function (err, result) {
+            contract.getNumber(function (err, result) {
                 if (!err) {
                     currentNumber = result.toNumber();
                     currentNumber++;
