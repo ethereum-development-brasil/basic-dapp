@@ -1,11 +1,11 @@
 <!DOCTYPE html>
+
 <head>
     <title>Basic Ethereum Dapp</title>
     <script src="web3js/dist/web3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        
-        var contract_address = "0x9D1aF3171786A0658072a35256f4147df7A3976A";
-        var contract_abi = [ { "constant": true, "inputs": [], "name": "getCreator", "outputs": [ { "name": "", "type": "address", "value": "0xc667e0aaf558667a5d872f90c2429f4c3bd88eca" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewNumber", "type": "uint256" } ], "name": "setMyNumber", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getNumber", "outputs": [ { "name": "", "type": "uint256", "value": "3" } ], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ];
+        var contract_address = "0x901E60561D618f57396beAC3753b96Ee0d54CFdc";
+        var contract_abi = [ { "constant": true, "inputs": [], "name": "getCreator", "outputs": [ { "name": "", "type": "address", "value": "0xa1fc10c18c94621349fb0762b4d95ea679c8ad58" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "kill", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "myNewNumber", "type": "uint256" } ], "name": "setMyNumber", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getMyNumber", "outputs": [ { "name": "", "type": "uint256", "value": "3" } ], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ];
 
         if (typeof web3 !== 'undefined') {
             web3 = new Web3(web3.currentProvider);
@@ -16,9 +16,9 @@
 
         var contract = web3.eth.contract(contract_abi).at(contract_address);
 
-        function getCounter(){
-            contract.getNumber(function(err, result){
-                if(!err){
+        function getCounter() {
+            contract.getMyNumber(function (err, result) {
+                if (!err) {
                     document.getElementById("myCounter").innerText = result.toNumber();
                 } else {
                     console.error(err);
@@ -26,19 +26,35 @@
             });
         }
 
-        function increaseCounter(){
-            contract.increaseCounter(function(err, result){
-                if(!err){
-                    document.getElementById("myCounter").innerText = result.toNumber();
+        function increaseCounter() {
+            var currentNumber;
+
+            contract.getMyNumber(function (err, result) {
+                if (!err) {
+                    currentNumber = result.toNumber();
+                    currentNumber++;
+
+                    contract.setMyNumber(currentNumber, {
+                        from: web3.eth.accounts[0],
+                        gas: 200000
+                    }, function (err, result) {
+                        if (!err) {
+                            var txHash = result;
+                            console.log(txHash);
+                        } else {
+                            console.error(err);
+                        }
+                    });
+
                 } else {
                     console.error(err);
                 }
-            })
+            });
         }
 
-        function getBalance(){
-            web3.eth.getBalance(web3.eth.accounts[0], function(err, result){
-                if(!err){
+        function getBalance() {
+            web3.eth.getBalance(web3.eth.accounts[0], function (err, result) {
+                if (!err) {
                     document.getElementById("myBalance").innerText = web3.fromWei(result, "ether");
                 } else {
                     console.error(err);
